@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyseur de Données CSV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h3 {
+            color: #333;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .file-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .file-input-container input[type="file"] {
+            flex-grow: 1;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #startAnalysisButton {
+            background-color: #007bff;
+            color: white;
+        }
+        #exportButton {
+            background-color: #28a745;
+            color: white;
+            display: none;
+        }
+        #showChartButton, #showFilteredChartButton {
+            background-color: #6c757d;
+            color: white;
+            display: none;
+        }
+        #resetButton {
+            background-color: #dc3545;
+            color: white;
+            display: none;
+        }
+        #results {
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            cursor: pointer;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .filter-input {
+            width: 80px;
+            padding: 4px;
+        }
+        .filter-select {
+            width: 100%;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analyseur des données mainstream communicator</h1>
+        
+        <div class="section">
+            <h3>Étape 1 : Télécharger les fichiers CSV</h3>
+            <div class="file-input-container">
+                <input type="file" id="csvFile" multiple accept=".csv">
+            </div>
+        </div>
+
+        <div class="section" id="columnSelection" style="display: none;">
+            <h3>Étape 2 : Configurer l'analyse</h3>
+            <div class="form-group">
+                <label for="offsetValue">Valeur à soustraire au "Niveau Liquide" (en mm):</label>
+                <input type="text" id="offsetValue" placeholder="Indiquer la valeur ici">
+            </div>
+            
+            <div class="form-group">
+                <label>Sélection des données à analyser :</label>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="checkHauteur" checked>
+                    <label for="checkHauteur">Niveau Liquide (mm)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="checkVitesse">
+                    <label for="checkVitesse">Vitesse (m/s)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="invertVitesse">
+                    <label for="invertVitesse">Inverser la vitesse si sonde à l'envers (X*(-1) en m/s)</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Ajouter des filtres :</label>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="filterHauteur">
+                    <label for="filterHauteur">Hauteur Filtrée (< 0mm = 0mm)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="filterVitesse">
+                    <label for="filterVitesse">Vitesse Filtrée (< 0m/s = 0m/s)</label>
+                </div>
+            </div>
+            <div class="button-group">
+                <button id="startAnalysisButton">Lancer l'analyse</button>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="showChartButton">Afficher graphique brut</button>
+            <button id="showFilteredChartButton">Afficher graphique filtré</button>
+            <button id="exportButton">Exporter en Excel</button>
+            <button id="resetButton">Réinitialiser</button>
+        </div>
+
+        <div id="results"></div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
